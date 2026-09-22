@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nihal Nigam — Mechanical Design Engineer</title>
+<meta name="description" content="CAE/FEA Engineer | Vehicle Simulation | Mechanical Design | Additive Manufacturing — Portfolio of Nihal Nigam"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&family=Karla:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* ===== DESIGN TOKENS ===== */
+:root,
+[data-theme="light"] {
+  --paper: #FDF6EC;
+  --paper-tint: #F5EBD8;
+  --paper-deep: #EDE0CC;
+  --paper-edge: #E2D5C3;
+  --paper-rgb: 253, 246, 236;
+  --ink: #2C2418;
+  --ink-soft: #6B5D4F;
+  --ink-mute: #A89A8C;
+  --burnt-orange: #C4652A;
+  --burnt-orange-deep: #A84E1A;
+  --burnt-orange-glow: rgba(196,101,42,0.12);
+  --honey: #D4A34A;
+  --honey-soft: rgba(212,163,74,0.55);
+  --sage: #7B9E6B;
+  --sage-deep: #5A7D4A;
+  --sage-soft: rgba(123,158,107,0.5);
+  --shadow-sm: 0 2px 6px rgba(44,36,24,0.06);
+  --shadow-md: 0 6px 20px rgba(44,36,24,0.1), 0 2px 4px rgba(44,36,24,0.06);
+  --shadow-lg: 0 12px 40px rgba(44,36,24,0.14), 0 4px 8px rgba(44,36,24,0.08);
+  --nav-bg: rgba(253,246,236,0.88);
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-body: 'Karla', 'DM Sans', sans-serif;
+  --font-hand: 'Caveat', cursive;
+  --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
+}
+
+[data-theme="dark"] {
+  --paper: #1A1510;
+  --paper-tint: #241E16;
+  --paper-deep: #2E261C;
+  --paper-edge: #3D3428;
+  --paper-rgb: 26, 21, 16;
+  --ink: #F0E6D6;
+  --ink-soft: #BFB09E;
+  --ink-mute: #7A6E60;
+  --burnt-orange: #E07835;
+  --burnt-orange-deep: #F08A45;
+  --burnt-orange-glow: rgba(224,120,53,0.15);
+  --honey: #E8B85A;
+  --honey-soft: rgba(232,184,90,0.4);
+  --sage: #8FB87C;
+  --sage-deep: #A0CC8D;
+  --sage-soft: rgba(143,184,124,0.35);
+  --shadow-sm: 0 2px 6px rgba(0,0,0,0.15);
+  --shadow-md: 0 6px 20px rgba(0,0,0,0.25), 0 2px 4px rgba(0,0,0,0.15);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.35), 0 4px 8px rgba(0,0,0,0.2);
+  --nav-bg: rgba(26,21,16,0.88);
+}
+
+/* ===== RESET & BASE ===== */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+  transition: background 400ms ease, color 400ms ease;
+}
+img { max-width:100%; display:block; }
+a { color: var(--burnt-orange); text-decoration: none; transition: color 200ms ease; }
+a:hover { color: var(--burnt-orange-deep); }
+::selection { background: var(--burnt-orange-glow); color: var(--burnt-orange-deep); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: var(--burnt-orange); border-radius: 2px; }
+
+/* ===== READING PROGRESS BAR ===== */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 200;
+  background: var(--burnt-orange);
+  width: 0%; transition: width 80ms linear;
+}
+
+/* ===== NAVIGATION ===== */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 36px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid var(--paper-edge);
+  transition: transform 300ms var(--ease-out), background 400ms ease;
+}
+nav.hidden { transform: translateY(-100%); }
+.nav-logo {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav-logo .dot { color: var(--burnt-orange); }
+.nav-links {
+  display: flex; gap: 20px; font-size: 16px; align-items: center;
+}
+.nav-links a {
+  position: relative; text-decoration: none; padding-bottom: 8px;
+  display: inline-flex; align-items: baseline; gap: 5px;
+}
+.nav-links .nav-num {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--ink-mute); transition: color 200ms ease;
+}
+.nav-links .nav-word {
+  position: relative; font-family: var(--font-body); font-weight: 500;
+  color: var(--ink); transition: color 200ms ease;
+}
+.nav-links a:hover .nav-num { color: var(--sage); }
+.nav-links a:hover .nav-word { color: var(--burnt-orange); }
+.nav-squig {
+  position: absolute; left: 0; right: 0; bottom: -6px;
+  width: 100%; height: 8px; opacity: 0; transition: opacity 220ms ease; overflow: visible;
+}
+.nav-links a:hover .nav-squig { opacity: 1; }
+
+/* Theme Toggle */
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px; border-radius: 999px; background: transparent;
+}
+.theme-btn {
+  width: 28px; height: 28px; border-radius: 50%; border: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: color 200ms ease, background 200ms ease;
+  background: transparent; color: var(--ink-mute);
+}
+.theme-btn.active {
+  background: var(--paper-tint); color: var(--burnt-orange);
+}
+
+/* Mobile menu */
+.ham {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; background: none; border: none; padding: 4px; z-index: 101;
+}
+.ham span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--ink-mute); transition: all .3s;
+}
+
+/* ===== SECTION COMMON ===== */
+section { padding: 80px 96px; max-width: 1300px; margin: 0 auto; }
+.section-hand {
+  font-family: var(--font-hand); font-size: clamp(22px, 2.2vw, 28px);
+  line-height: 1.1; color: var(--burnt-orange-deep);
+  transform: rotate(-1.5deg); display: inline-block; margin-bottom: 10px;
+}
+.section-title {
+  font-family: var(--font-serif); font-size: clamp(28px, 3.2vw, 42px);
+  font-weight: 500; line-height: 1.1; letter-spacing: -0.02em;
+  color: var(--ink); margin-bottom: 8px;
+}
+.section-title em { color: var(--burnt-orange); font-style: italic; }
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 700ms var(--ease-out), transform 800ms var(--ease-out);
+  will-change: opacity, transform;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Washi tape accent */
+.washi {
+  position: absolute; width: 84px; height: 18px;
+  border: 1px dashed rgba(212,163,74,0.3);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06); z-index: 2;
+  pointer-events: none;
+}
+.washi-orange { background: rgba(196,101,42,0.45); }
+.washi-sage { background: rgba(123,158,107,0.5); }
+.washi-honey { background: rgba(212,163,74,0.55); }
+
+/* Figure caption */
+.fig-caption {
+  font-family: var(--font-hand); font-size: 17px;
+  color: var(--ink-mute); text-align: center; margin-top: 12px;
+}
+
+/* Skill tags */
+.tag {
+  display: inline-block; padding: 4px 12px;
+  border: 1px solid var(--sage); border-radius: 4px;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--sage-deep); background: transparent;
+  transition: all 250ms ease;
+}
+.tag:hover {
+  background: var(--sage-soft); color: var(--ink); border-color: var(--sage-deep);
+}
+
+/* Buttons */
+.btn-fill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; background: var(--burnt-orange); color: #fff;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  letter-spacing: 0.04em; border: none; border-radius: 6px;
+  cursor: pointer; text-decoration: none;
+  transition: all 300ms ease; box-shadow: var(--shadow-sm);
+}
+.btn-fill:hover {
+  background: var(--burnt-orange-deep); color: #fff;
+  transform: translateY(-2px); box-shadow: var(--shadow-md);
+}
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; background: transparent;
+  border: 1.5px solid var(--paper-edge); color: var(--ink-soft);
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  letter-spacing: 0.04em; border-radius: 6px;
+  cursor: pointer; text-decoration: none;
+  transition: all 300ms ease;
+}
+.btn-outline:hover {
+  border-color: var(--burnt-orange); color: var(--burnt-orange);
+  transform: translateY(-2px);
+}
+
+/* ===== HERO ===== */
+#hero {
+  min-height: 90vh; display: flex; align-items: center;
+  padding-top: 100px; padding-bottom: 60px;
+}
+.hero-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; align-items: center; width: 100%;
+}
+.hero-eyebrow {
+  font-family: var(--font-hand); font-size: 24px;
+  color: var(--burnt-orange); transform: rotate(-2deg);
+  display: inline-block; margin-bottom: 12px;
+}
+.hero-name {
+  font-family: var(--font-serif);
+  font-size: clamp(48px, 7vw, 80px);
+  font-weight: 500; line-height: 0.95;
+  letter-spacing: -0.02em; color: var(--ink);
+  margin-bottom: 16px;
+}
+.hero-name em { color: var(--burnt-orange); font-style: italic; }
+.hero-squig {
+  display: block; margin: 8px 0 20px; max-width: 260px; height: 16px;
+}
+.hero-subtitle {
+  font-family: var(--font-body); font-size: 18px;
+  color: var(--ink-soft); font-weight: 400;
+  letter-spacing: 0.02em; margin-bottom: 20px;
+}
+.hero-desc {
+  font-family: var(--font-body); font-size: 16px;
+  color: var(--ink-mute); line-height: 1.75; max-width: 480px;
+  margin-bottom: 32px;
+}
+.hero-desc strong { color: var(--burnt-orange); font-weight: 600; }
+.hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-photo-wrap {
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+.hero-photo-frame {
+  position: relative; transform: rotate(2deg);
+  border-radius: 12px; overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 3px solid var(--paper-edge);
+  max-width: 360px; width: 100%;
+}
+.hero-photo-frame img {
+  width: 100%; height: auto; display: block;
+  aspect-ratio: 3/4; object-fit: cover;
+}
+.hero-photo-tape {
+  position: absolute; top: -10px; left: 50%;
+  transform: translateX(-50%) rotate(-4deg);
+  width: 100px; height: 20px;
+  background: var(--honey-soft);
+  border: 1px dashed rgba(212,163,74,0.3);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06); z-index: 2;
+}
+.hero-photo-caption {
+  font-family: var(--font-hand); font-size: 16px;
+  color: var(--ink-mute); text-align: center; margin-top: 14px;
+  transform: rotate(1deg);
+}
+
+/* ===== PROJECTS ===== */
+#projects { padding-bottom: 40px; }
+.project-card {
+  position: relative;
+  background: var(--paper);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 48px;
+  overflow: visible;
+  transition: transform 500ms var(--ease-out), box-shadow 500ms var(--ease-out);
+}
+.project-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+.project-card-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; overflow: hidden; border-radius: 12px;
+}
+.project-card:nth-child(even) .project-card-inner {
+  direction: rtl;
+}
+.project-card:nth-child(even) .project-card-inner > * {
+  direction: ltr;
+}
+.project-img-wrap {
+  position: relative; overflow: hidden;
+  background: var(--paper-deep);
+  transition: height 450ms cubic-bezier(.4,0,.2,1);
+}
+.project-slider {
+  display: flex; transition: transform 500ms cubic-bezier(.4,0,.2,1);
+  align-items: flex-start;
+}
+.project-slide {
+  flex-shrink: 0; width: 100%;
+}
+.project-slide img {
+  width: 100%; height: auto; display: block;
+  user-select: none; pointer-events: none;
+}
+.project-slider-nav {
+  position: absolute; bottom: 12px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 6px; align-items: center;
+  padding: 6px 12px;
+  background: rgba(var(--paper-rgb), 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 20px; z-index: 3;
+}
+.project-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--paper-edge); border: none; cursor: pointer;
+  transition: all 250ms ease; padding: 0;
+}
+.project-dot.active {
+  background: var(--burnt-orange); width: 20px; border-radius: 4px;
+}
+.project-slider-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--paper-edge); background: var(--paper);
+  color: var(--ink-mute); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: all 200ms ease;
+}
+.project-slider-btn:hover {
+  border-color: var(--burnt-orange); color: var(--burnt-orange);
+}
+.project-info {
+  padding: 36px 32px; display: flex; flex-direction: column;
+  justify-content: center; gap: 12px;
+}
+.project-num {
+  font-family: var(--font-hand); font-size: 20px;
+  color: var(--burnt-orange); transform: rotate(-1deg);
+  display: inline-block;
+}
+.project-name {
+  font-family: var(--font-serif); font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 500; line-height: 1.15; color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.project-client {
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.project-desc {
+  font-family: var(--font-body); font-size: 15px;
+  color: var(--ink-soft); line-height: 1.7;
+}
+.project-desc strong { color: var(--burnt-orange); font-weight: 600; }
+.project-tags {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+}
+.project-tape {
+  position: absolute; top: -10px; z-index: 5;
+}
+
+/* ===== ABOUT ===== */
+#about { background: var(--paper-tint); border-radius: 0; }
+.about-grid {
+  display: grid; grid-template-columns: 1.2fr 1fr;
+  gap: 56px; align-items: start; margin-top: 36px;
+}
+.about-text { font-size: 16px; color: var(--ink-soft); line-height: 1.8; }
+.about-text p { margin-bottom: 16px; }
+.about-text strong { color: var(--burnt-orange); font-weight: 600; }
+.about-pullquote {
+  font-family: var(--font-hand); font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 700; line-height: 1.25;
+  color: var(--burnt-orange-deep); transform: rotate(-0.5deg);
+  margin: 24px 0; max-width: 44ch;
+}
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+.stat-card {
+  position: relative; padding: 20px;
+  background: var(--paper); border-radius: 8px;
+  box-shadow: var(--shadow-sm); overflow: hidden;
+  transition: transform 300ms ease, box-shadow 300ms ease;
+  transform: rotate(-0.5deg);
+}
+.stat-card:nth-child(2) { transform: rotate(0.8deg); }
+.stat-card:nth-child(3) { transform: rotate(0.3deg); }
+.stat-card:nth-child(4) { transform: rotate(-0.7deg); }
+.stat-card:hover { transform: rotate(0deg) translateY(-3px); box-shadow: var(--shadow-md); }
+.stat-num {
+  font-family: var(--font-serif); font-size: 36px;
+  font-weight: 500; color: var(--burnt-orange); line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-mute); margin-top: 6px;
+}
+.info-card {
+  position: relative; margin-top: 18px; padding: 22px;
+  background: var(--paper); border-radius: 8px;
+  box-shadow: var(--shadow-sm); transform: rotate(0.5deg);
+  transition: transform 300ms ease;
+}
+.info-card:hover { transform: rotate(0deg); }
+.info-label {
+  font-family: var(--font-hand); font-size: 18px;
+  color: var(--burnt-orange); margin-bottom: 6px;
+}
+.info-val {
+  font-family: var(--font-serif); font-size: 18px; color: var(--ink);
+}
+.info-sub {
+  font-size: 14px; color: var(--ink-mute); margin-top: 4px;
+}
+.info-btns {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;
+}
+
+/* ===== INDIASKILLS ===== */
+#indiaskills {
+  background: var(--paper); position: relative;
+}
+.ws-layout {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 56px; align-items: center; margin-top: 36px;
+}
+.ws-timeline { display: flex; flex-direction: column; }
+.ws-step {
+  display: grid; grid-template-columns: 56px 1fr;
+  gap: 20px; align-items: stretch;
+}
+.ws-line-col { display: flex; flex-direction: column; align-items: center; }
+.ws-node {
+  width: 44px; height: 44px; flex-shrink: 0;
+  border: 2px solid var(--burnt-orange);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--paper); border-radius: 50%;
+  font-size: 18px; transition: all 300ms ease;
+}
+.ws-node.top {
+  background: var(--burnt-orange-glow);
+  box-shadow: 0 0 20px var(--burnt-orange-glow);
+}
+.ws-conn {
+  width: 2px; flex: 1; min-height: 2rem;
+  background: linear-gradient(to bottom, var(--burnt-orange), var(--paper-edge));
+}
+.ws-content { padding: 10px 0 28px; }
+.ws-lev {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink-mute); margin-bottom: 4px;
+}
+.ws-stage-title {
+  font-family: var(--font-serif); font-size: 20px;
+  font-weight: 500; color: var(--ink); margin-bottom: 6px;
+}
+.ws-badge {
+  display: inline-block; padding: 4px 14px;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  font-weight: 600; border-radius: 4px;
+}
+.ws-badge-gold { background: var(--burnt-orange); color: #fff; }
+.ws-badge-exc {
+  background: linear-gradient(135deg, var(--burnt-orange), var(--honey), var(--burnt-orange));
+  color: #fff; font-weight: 700;
+  box-shadow: 0 0 18px var(--burnt-orange-glow);
+}
+.ws-desc {
+  font-size: 14px; color: var(--ink-soft); margin-top: 8px; line-height: 1.7;
+}
+.ws-medal-wrap {
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+.ws-medal-frame {
+  position: relative; transform: rotate(-1.5deg);
+  border-radius: 10px; overflow: hidden;
+  box-shadow: var(--shadow-lg); max-width: 380px; width: 100%;
+  border: 2px solid var(--paper-edge);
+}
+.ws-medal-frame img { width: 100%; height: auto; }
+
+/* ===== SKILLS ===== */
+#skills { background: var(--paper-tint); }
+.skills-categories {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 32px; margin-top: 36px;
+}
+.skill-cat {
+  position: relative; padding: 24px;
+  background: var(--paper); border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 300ms ease, box-shadow 300ms ease;
+}
+.skill-cat:nth-child(1) { transform: rotate(-0.6deg); }
+.skill-cat:nth-child(2) { transform: rotate(0.4deg); }
+.skill-cat:nth-child(3) { transform: rotate(0.3deg); }
+.skill-cat:nth-child(4) { transform: rotate(-0.5deg); }
+.skill-cat:nth-child(5) { transform: rotate(0.2deg); }
+.skill-cat:hover { transform: rotate(0deg) translateY(-3px); box-shadow: var(--shadow-md); }
+.skill-cat-title {
+  font-family: var(--font-hand); font-size: 22px;
+  color: var(--burnt-orange); margin-bottom: 12px;
+}
+.skill-cat-tags {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+
+/* ===== EXPERIENCE ===== */
+#experience { background: var(--paper); }
+.exp-list { margin-top: 36px; }
+.exp-item {
+  display: grid; grid-template-columns: 180px 1fr;
+  gap: 32px; padding: 28px 0; align-items: start;
+  border-bottom: 1px solid var(--paper-edge);
+  position: relative; transition: all 250ms ease;
+}
+.exp-item::before {
+  content: ''; position: absolute;
+  left: -96px; right: -96px; top: 0; bottom: 0;
+  background: var(--paper-tint); opacity: 0;
+  transition: opacity 250ms ease; z-index: -1;
+  border-radius: 8px;
+}
+.exp-item:hover::before { opacity: 1; }
+.exp-date {
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.06em; color: var(--ink-mute); line-height: 1.7;
+}
+.exp-date .exp-loc {
+  font-family: var(--font-hand); font-size: 15px;
+  color: var(--sage); display: block; margin-top: 2px;
+}
+.exp-co {
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--burnt-orange); margin-bottom: 4px;
+}
+.exp-role {
+  font-family: var(--font-serif); font-size: 22px;
+  font-weight: 500; color: var(--ink); margin-bottom: 10px;
+}
+.exp-ul { list-style: none; }
+.exp-ul li {
+  font-size: 14px; color: var(--ink-soft); padding: 3px 0 3px 18px;
+  position: relative; line-height: 1.7;
+}
+.exp-ul li::before {
+  content: '—'; position: absolute; left: 0;
+  color: var(--burnt-orange); font-size: 13px;
+}
+.exp-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+
+/* ===== CERTIFICATIONS ===== */
+#certifications { background: var(--paper-tint); }
+.certs-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 14px; margin-top: 36px;
+}
+.cert {
+  position: relative; padding: 22px;
+  background: var(--paper); border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+  transition: all 300ms ease; cursor: default;
+  overflow: hidden;
+}
+.cert:nth-child(odd) { transform: rotate(-0.4deg); }
+.cert:nth-child(even) { transform: rotate(0.6deg); }
+.cert:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: var(--shadow-md); border-color: var(--burnt-orange);
+}
+.cert-icon { font-size: 24px; margin-bottom: 8px; }
+.cert-pri {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--burnt-orange); margin-bottom: 6px;
+}
+.cert-name {
+  font-family: var(--font-serif); font-size: 16px;
+  color: var(--ink); font-weight: 500; margin-bottom: 6px; line-height: 1.3;
+}
+.cert-org { font-size: 13px; color: var(--ink-mute); }
+.cert-date {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-mute); margin-top: 6px;
+}
+
+/* ===== EDUCATION ===== */
+#education { background: var(--paper); }
+.edu-list { margin-top: 36px; display: flex; flex-direction: column; gap: 14px; }
+.edu-card {
+  position: relative; padding: 22px 28px;
+  background: var(--paper-tint); border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center; gap: 24px;
+  transition: all 250ms ease;
+  border-left: 4px solid transparent;
+}
+.edu-card:hover {
+  border-left-color: var(--burnt-orange);
+  transform: translateX(4px); box-shadow: var(--shadow-md);
+}
+.edu-deg {
+  font-family: var(--font-serif); font-size: 19px;
+  font-weight: 500; color: var(--ink); margin-bottom: 4px;
+}
+.edu-inst { font-size: 14px; color: var(--ink-mute); }
+.edu-yr {
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--burnt-orange); text-align: right; white-space: nowrap;
+}
+.edu-grade {
+  font-size: 13px; color: var(--ink-soft); margin-top: 3px;
+}
+
+/* ===== CONTACT ===== */
+#contact {
+  background: var(--paper); padding-top: 80px; padding-bottom: 80px;
+  border-top: 1px solid var(--paper-edge);
+}
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: start;
+}
+.contact-h {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 500; line-height: 1.08; margin-bottom: 18px;
+}
+.contact-h em { color: var(--burnt-orange); font-style: italic; }
+.contact-sub {
+  font-size: 16px; color: var(--ink-mute); max-width: 380px; line-height: 1.8;
+}
+.c-links { display: flex; flex-direction: column; }
+.c-link {
+  display: flex; align-items: center; gap: 14px;
+  text-decoration: none; color: var(--ink-soft);
+  font-size: 15px; transition: color 200ms ease;
+  padding: 16px 0; border-bottom: 1px solid var(--paper-edge);
+}
+.c-link:hover { color: var(--burnt-orange); }
+.c-icon {
+  width: 40px; height: 40px;
+  border: 1.5px solid var(--paper-edge); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+  transition: all 250ms ease;
+}
+.c-link:hover .c-icon {
+  border-color: var(--burnt-orange); color: var(--burnt-orange);
+  background: var(--burnt-orange-glow);
+}
+.c-lbl {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-mute); display: block; margin-bottom: 2px;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--paper-tint); padding: 24px 36px;
+  border-top: 1px solid var(--paper-edge);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.f-copy {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.f-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border: 1px solid var(--paper-edge);
+  border-radius: 6px; color: var(--ink-mute);
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; transition: all 250ms ease;
+}
+.f-link:hover { border-color: var(--burnt-orange); color: var(--burnt-orange); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  section { padding: 60px 40px; }
+  .hero-grid { gap: 40px; }
+  .project-card-inner { grid-template-columns: 1fr; }
+  .project-card:nth-child(even) .project-card-inner { direction: ltr; }
+  .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .ws-layout { grid-template-columns: 1fr; gap: 32px; }
+  .skills-categories { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+
+@media (max-width: 768px) {
+  section { padding: 48px 20px; }
+  nav { padding: 12px 18px; }
+  .nav-links {
+    display: none; flex-direction: column; gap: 24px;
+    position: fixed; inset: 0;
+    background: var(--paper); align-items: center;
+    justify-content: center; z-index: 99;
+    font-size: 22px;
+  }
+  .nav-links.open { display: flex; }
+  .ham { display: flex; }
+  .hero-grid { grid-template-columns: 1fr; gap: 32px; text-align: center; }
+  .hero-photo-wrap { order: -1; }
+  .hero-photo-frame { max-width: 240px; }
+  .hero-desc { max-width: 100%; }
+  .hero-ctas { justify-content: center; }
+  .hero-squig { margin-left: auto; margin-right: auto; }
+  #hero { min-height: auto; padding-top: 80px; }
+  .exp-item { grid-template-columns: 1fr; gap: 8px; }
+  .exp-item::before { left: -20px; right: -20px; }
+  .certs-grid { grid-template-columns: 1fr; }
+  .edu-card { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+/* ===== CUSTOM CURSOR ===== */
+@media (pointer: fine) {
+  * { cursor: none !important; }
+  a, button, [role="button"], input, textarea, select, label { cursor: none !important; }
+}
+.cursor-dot {
+  position: fixed; top: 0; left: 0; z-index: 9999;
+  pointer-events: none; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  mix-blend-mode: difference;
+}
+.cursor-main {
+  width: 10px; height: 10px;
+  background: var(--burnt-orange);
+  transition: width 200ms ease, height 200ms ease, opacity 200ms ease;
+}
+.cursor-main.hovering {
+  width: 32px; height: 32px; opacity: 0.5;
+}
+.cursor-trail {
+  background: var(--burnt-orange); opacity: 0;
+  transition: opacity 300ms ease;
+}
+.cursor-trail.visible { opacity: 1; }
+@media (pointer: coarse), (max-width: 768px) {
+  .cursor-dot { display: none !important; }
+  * { cursor: auto !important; }
+  a, button { cursor: pointer !important; }
+}
+</style>
+</head>
+<body>
+
+
+<!-- Custom Cursor -->
+<div class="cursor-dot cursor-main" id="cursorMain"></div>
+<div class="cursor-dot cursor-trail" id="ct1"></div>
+<div class="cursor-dot cursor-trail" id="ct2"></div>
+<div class="cursor-dot cursor-trail" id="ct3"></div>
+<div class="cursor-dot cursor-trail" id="ct4"></div>
+<div class="cursor-dot cursor-trail" id="ct5"></div>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Navigation -->
+<nav id="navbar">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div class="theme-toggle">
+      <button class="theme-btn active" id="lightBtn" aria-label="Light mode" title="Light mode">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button class="theme-btn" id="darkBtn" aria-label="Dark mode" title="Dark mode">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+    <a href="#hero" class="nav-logo">nihal <span class="dot">·</span> nigam</a>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a href="#projects"><span class="nav-num">/01</span><span class="nav-word">work<svg class="nav-squig" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M2 5 Q10 1,18 5 T34 5 T50 5 T66 5 T82 5 T98 5" stroke="var(--burnt-orange)" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span></a>
+    <a href="#about"><span class="nav-num">/02</span><span class="nav-word">about<svg class="nav-squig" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M2 5 Q10 1,18 5 T34 5 T50 5 T66 5 T82 5 T98 5" stroke="var(--burnt-orange)" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span></a>
+    <a href="#skills"><span class="nav-num">/03</span><span class="nav-word">skills<svg class="nav-squig" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M2 5 Q10 1,18 5 T34 5 T50 5 T66 5 T82 5 T98 5" stroke="var(--burnt-orange)" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span></a>
+    <a href="#experience"><span class="nav-num">/04</span><span class="nav-word">experience<svg class="nav-squig" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M2 5 Q10 1,18 5 T34 5 T50 5 T66 5 T82 5 T98 5" stroke="var(--burnt-orange)" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span></a>
+    <a href="#contact"><span class="nav-num">/05</span><span class="nav-word">contact<svg class="nav-squig" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M2 5 Q10 1,18 5 T34 5 T50 5 T66 5 T82 5 T98 5" stroke="var(--burnt-orange)" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span></a>
+  </div>
+  <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section id="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow reveal">mechanical design engineer</div>
+      <h1 class="hero-name reveal" style="transition-delay:.1s">Nihal<br><em>Nigam</em></h1>
+      <svg class="hero-squig reveal" viewBox="0 0 260 16" preserveAspectRatio="none" style="transition-delay:.15s">
+        <path d="M4 10 Q20 2, 36 10 T68 10 T100 10 T132 10 T164 10 T196 10 T228 10 T256 10" stroke="var(--burnt-orange)" stroke-width="4" stroke-linecap="round" fill="none"/>
+      </svg>
+      <p class="hero-subtitle reveal" style="transition-delay:.2s">CAE/FEA &nbsp;·&nbsp; Product Design &nbsp;·&nbsp; Additive Manufacturing</p>
+      <p class="hero-desc reveal" style="transition-delay:.25s">
+        Crafting precision-engineered designs from concept to production-ready reality.
+        <strong>IndiaSkills 2025–26 Medallion of Excellence</strong> winner in Additive Manufacturing.
+        Delivering OEM-grade structural solutions for <strong>Ashok Leyland, CEAT, EKA Mobility</strong> &amp; beyond.
+      </p>
+      <div class="hero-ctas reveal" style="transition-delay:.3s">
+        <a href="https://www.linkedin.com/in/nihal-nigam-ri1522" target="_blank" class="btn-fill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          Connect on LinkedIn
+        </a>
+        <a href="#projects" class="btn-outline">View Projects</a>
+      </div>
+    </div>
+    <div class="hero-photo-wrap reveal" style="transition-delay:.2s">
+      <div class="hero-photo-frame">
+        <div class="hero-photo-tape"></div>
+        <img src="images/profile.jpg" alt="Nihal Nigam" loading="eager"/>
+      </div>
+      <div class="hero-photo-caption">fig. 00 — that's me!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PROJECTS ==================== -->
+<section id="projects">
+  <div class="section-hand reveal">· selected work</div>
+  <h2 class="section-title reveal">Engineering <em>Projects</em></h2>
+  <p class="reveal" style="font-size:16px;color:var(--ink-soft);max-width:600px;margin-top:8px;margin-bottom:40px;line-height:1.7;">
+    From concept sketches to production-floor reality — a selection of mechanical design, reverse engineering, and prototyping work.
+  </p>
+
+  <!-- Project 1: NHAI -->
+  <div class="project-card reveal" style="transition-delay:.05s">
+    <div class="project-tape washi washi-orange" style="left:calc(50% - 42px);transform:rotate(-3deg);"></div>
+    <div class="project-card-inner">
+      <div class="project-img-wrap">
+        <div class="project-slider" data-slider>
+          <div class="project-slide"><img src="images/nhai-3.png" alt="NHAI Friction Tester — Isometric CAD" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/nhai-1.png" alt="NHAI — Top Layout" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/nhai-2.png" alt="NHAI — Rear Suspension" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/nhai-4.png" alt="NHAI — Front Perspective" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/nhai-5.png" alt="NHAI — Front Elevation" loading="lazy"/></div>
+        </div>
+        <div class="project-slider-nav">
+          <button class="project-slider-btn" data-prev>&#8592;</button>
+          <div class="project-dots" data-dots></div>
+          <button class="project-slider-btn" data-next>&#8594;</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-num">project no. 01 · active</div>
+        <div class="project-client">NHAI · Highway Infrastructure Testing</div>
+        <h3 class="project-name">Road Surface Friction Testing Machine</h3>
+        <p class="project-desc">
+          Prototype 1 of a highway friction measurement device for NHAI. Led the <strong>prototyping-to-production design transition</strong>, integrating inline torque sensors and hydraulic fluid motors for controlled reverse torque. The system measures real-time road friction coefficients at highway speeds with a custom suspension cradle and spring-damper assembly.
+        </p>
+        <div class="project-tags">
+          <span class="tag">PTC Creo</span><span class="tag">Torque Sensing</span><span class="tag">Fluid Motors</span><span class="tag">Suspension Design</span><span class="tag">Prototype</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project 2: Pragyanik AI -->
+  <div class="project-card reveal" style="transition-delay:.05s">
+    <div class="project-tape washi washi-sage" style="left:calc(50% + 10px);transform:rotate(2.5deg);"></div>
+    <div class="project-card-inner">
+      <div class="project-img-wrap">
+        <div class="project-slider" data-slider>
+          <div class="project-slide"><img src="images/pragyanik-cad.jpg" alt="Pragyanik AI Robot — SolidWorks CAD" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/pragyanik-build-1.jpg" alt="Pragyanik — Physical Build Front" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/pragyanik-build-2.jpg" alt="Pragyanik — Physical Build Side" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/pragyanik-build-3.jpg" alt="Pragyanik — Physical Build Angle" loading="lazy"/></div>
+        </div>
+        <div class="project-slider-nav">
+          <button class="project-slider-btn" data-prev>&#8592;</button>
+          <div class="project-dots" data-dots></div>
+          <button class="project-slider-btn" data-next>&#8594;</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-num">project no. 02 · ongoing</div>
+        <div class="project-client">Pragyanik AI Pvt. Ltd. · Agricultural Robotics</div>
+        <h3 class="project-name">AI-Driven Autonomous Farming Robot</h3>
+        <p class="project-desc">
+          Designed and iterated full mechanical assemblies of an <strong>AI-driven agricultural robot</strong> in SolidWorks — chassis, seeding, weeding, and irrigation subsystems. Performed <strong>kinematic modelling in MATLAB</strong> and structural simulations in ANSYS. Worked hands-on through the full <strong>design-to-fabrication cycle</strong> as part of a cross-functional team building a field-deployable autonomous farming robot.
+        </p>
+        <div class="project-tags">
+          <span class="tag">SolidWorks</span><span class="tag">ANSYS</span><span class="tag">MATLAB</span><span class="tag">Robotics</span><span class="tag">Fabrication</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project 3: CEAT -->
+  <div class="project-card reveal" style="transition-delay:.05s">
+    <div class="project-tape washi washi-honey" style="left:calc(50% - 50px);transform:rotate(-2deg);"></div>
+    <div class="project-card-inner">
+      <div class="project-img-wrap">
+        <div class="project-slider" data-slider>
+          <div class="project-slide"><img src="images/ceat-cad-1.png" alt="CEAT Jamming Machine — Full CAD Assembly" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/ceat-cad-2.png" alt="CEAT — Actuator Detail" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/ceat-cad-3.png" alt="CEAT — System CAD Layout" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/ceat-factory-1.jpg" alt="CEAT — Factory Floor Installation" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/ceat-factory-2.jpg" alt="CEAT — Motor & Carrier Close-up" loading="lazy"/></div>
+        </div>
+        <div class="project-slider-nav">
+          <button class="project-slider-btn" data-prev>&#8592;</button>
+          <div class="project-dots" data-dots></div>
+          <button class="project-slider-btn" data-next>&#8594;</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-num">project no. 03</div>
+        <div class="project-client">Swastik Engineering × CEAT Tyres</div>
+        <h3 class="project-name">Industrial Tyre Jamming Machine — 4× Capacity</h3>
+        <p class="project-desc">
+          Reverse-engineered an existing industrial jamming machine for CEAT, capturing precise geometric and functional data. Redesigned components to develop an improved, automated version — <strong>boosting daily production from 5,000 to 20,000 tyres/day</strong>. Currently operational on the factory floor.
+        </p>
+        <div class="project-tags">
+          <span class="tag">PTC Creo</span><span class="tag">Reverse Engineering</span><span class="tag">Automation</span><span class="tag">DFM</span><span class="tag">Production</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project 4: Bus Body -->
+  <div class="project-card reveal" style="transition-delay:.05s">
+    <div class="project-tape washi washi-orange" style="left:calc(50% + 5px);transform:rotate(3deg);"></div>
+    <div class="project-card-inner">
+      <div class="project-img-wrap">
+        <div class="project-slider" data-slider>
+          <div class="project-slide"><img src="images/bus-1.jpg" alt="Bus CAD — Full Assembly" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/bus-2.jpg" alt="Bus CAD — Side Elevation" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/bus-3.jpg" alt="Bus CAD — Top View" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/bus-4.jpg" alt="Bus — Steel Frame Build" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/bus-5.jpg" alt="Bus — Full Frame Side" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/bus-6.jpg" alt="Bus — Interior Frame" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/bus-7.jpg" alt="Bus — Roof Arch" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/bus-8.jpg" alt="Bus — Front Panel Assembly" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/bus-9.jpg" alt="Bus — Panelling Stage" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/bus-10.jpg" alt="Bus — Completed Prototype" loading="lazy"/></div>
+        </div>
+        <div class="project-slider-nav">
+          <button class="project-slider-btn" data-prev>&#8592;</button>
+          <div class="project-dots" data-dots></div>
+          <button class="project-slider-btn" data-next>&#8594;</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-num">project no. 04</div>
+        <div class="project-client">Sanatan Bus Body Builder × Ashok Leyland</div>
+        <h3 class="project-name">Bus Body Prototype — Wheelbase 4900mm</h3>
+        <p class="project-desc">
+          Complete structural body design for a 4900mm wheelbase prototype bus for Ashok Leyland. <strong>Sole designer</strong> — from 3D CAD model to DFM-compliant 2D drawings and ZEDBC-standard BOM. Design went directly to fabrication; physical prototype <strong>successfully built in just 3 weeks</strong>. Zero rework cycles.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Creo</span><span class="tag">SolidWorks</span><span class="tag">DFM</span><span class="tag">ZEDBC BOM</span><span class="tag">Structural</span><span class="tag">Prototype</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project 5: Punching Machine -->
+  <div class="project-card reveal" style="transition-delay:.05s">
+    <div class="project-tape washi washi-sage" style="left:calc(50% - 45px);transform:rotate(-1.5deg);"></div>
+    <div class="project-card-inner">
+      <div class="project-img-wrap">
+        <div class="project-slider" data-slider>
+          <div class="project-slide"><img src="images/punch-1.png" alt="Punching Machine — Front Isometric" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/punch-2.png" alt="Punching Machine — Feed Table" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/punch-3.png" alt="Punching Machine — Pin Close-up" loading="lazy"/></div>
+        </div>
+        <div class="project-slider-nav">
+          <button class="project-slider-btn" data-prev>&#8592;</button>
+          <div class="project-dots" data-dots></div>
+          <button class="project-slider-btn" data-next>&#8594;</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-num">project no. 05</div>
+        <div class="project-client">Vendor · Packaging Machinery</div>
+        <h3 class="project-name">Sheet Perforating & Punching Machine</h3>
+        <p class="project-desc">
+          Designed a twin-roller nip-punching machine for packaging sheet perforation. Features <strong>individually spring-loaded pins</strong> in a staggered/helical pattern for progressive load distribution. Synchronized spur gear drive ensures zero-drag sheet passage. Used downstream for <strong>vacuum-forming tooling</strong> in blister pack and tray manufacturing.
+        </p>
+        <div class="project-tags">
+          <span class="tag">PTC Creo</span><span class="tag">Machine Design</span><span class="tag">Spring-Loaded</span><span class="tag">Gear Drive</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project 6: EKA -->
+  <div class="project-card reveal" style="transition-delay:.05s">
+    <div class="project-tape washi washi-honey" style="left:calc(50% + 8px);transform:rotate(2deg);"></div>
+    <div class="project-card-inner">
+      <div class="project-img-wrap">
+        <div class="project-slider" data-slider>
+          <div class="project-slide"><img src="images/eka-1.jpg" alt="EKA Rear Wall Panel Trolley" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/eka-2.jpg" alt="EKA Seat Box Trolley Front" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/eka-3.jpg" alt="EKA Seat Box Trolley Back" loading="lazy"/></div>
+        </div>
+        <div class="project-slider-nav">
+          <button class="project-slider-btn" data-prev>&#8592;</button>
+          <div class="project-dots" data-dots></div>
+          <button class="project-slider-btn" data-next>&#8594;</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-num">project no. 06</div>
+        <div class="project-client">EKA Mobility · EV Industry</div>
+        <h3 class="project-name">Electric Bus Logistics Trolleys</h3>
+        <p class="project-desc">
+          Multi-variant logistics trolleys engineered for <strong>electric bus component handling</strong> — rear wall panels and seat boxes. Full parametric 3D models with step-by-step 2D manufacturing drawings. Delivered for EV production line at Chakan, Maharashtra.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Creo</span><span class="tag">Parametric 3D</span><span class="tag">2D Drafting</span><span class="tag">EV Industry</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project 7: Acoustic Chair -->
+  <div class="project-card reveal" style="transition-delay:.05s">
+    <div class="project-tape washi washi-orange" style="left:calc(50% - 40px);transform:rotate(-2.5deg);"></div>
+    <div class="project-card-inner">
+      <div class="project-img-wrap">
+        <div class="project-slider" data-slider>
+          <div class="project-slide"><img src="images/acoustic-1.jpg" alt="Acoustic Cone Pod Chair" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/acoustic-2.jpg" alt="Acoustic Shell Lounge" loading="lazy"/></div>
+          <div class="project-slide"><img src="images/acoustic-3.jpg" alt="Acoustic Capsule Pod" loading="lazy"/></div>
+        </div>
+        <div class="project-slider-nav">
+          <button class="project-slider-btn" data-prev>&#8592;</button>
+          <div class="project-dots" data-dots></div>
+          <button class="project-slider-btn" data-next>&#8594;</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-num">project no. 07 · freelance</div>
+        <div class="project-client">Independent · Industrial Design</div>
+        <h3 class="project-name">Acoustic Privacy Seating</h3>
+        <p class="project-desc">
+          A freelance industrial design project exploring acoustic privacy seating — three distinct forms: a <strong>cone pod, organic shell lounge, and capsule pod</strong>. Each addresses personal acoustic shielding in open-plan environments. Designed &amp; rendered in SolidWorks.
+        </p>
+        <div class="project-tags">
+          <span class="tag">SolidWorks</span><span class="tag">Surfacing</span><span class="tag">Industrial Design</span><span class="tag">Rendering</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ABOUT ==================== -->
+<section id="about">
+  <div class="section-hand reveal">· about me</div>
+  <h2 class="section-title reveal">Engineer by passion,<br><em>precision</em> by nature</h2>
+  <div class="about-grid">
+    <div class="about-text reveal" style="transition-delay:.1s">
+      <p>I'm a mechanical design engineer specialising in <strong>CAE/FEA simulation, structural product design, additive manufacturing</strong>, and DFM-ready drafting. At Sanatan Bus Body Builder I independently designed the full structural body of a prototype bus for Ashok Leyland — completing the entire CAD model in just 3 weeks from chassis arrival and seeing it physically fabricated.</p>
+      <p>At Swastik Engineering I <strong>reverse-engineered and redesigned an industrial tyre jamming machine for CEAT</strong> — the improved automated version is currently operational, boosting daily production 4×. As a freelancer with EKA Mobility I engineered purpose-built logistics trolleys for their electric bus production line.</p>
+      <div class="about-pullquote">I bring competitive precision and a constant drive to deliver production-ready solutions aligned with OEM standards and real-world manufacturing constraints.</div>
+      <p>Currently building an <strong>AI-driven agricultural robot</strong> at Pragyanik AI, and a <strong>road friction testing machine prototype for NHAI</strong>. Targeting CAE/Vehicle Simulation roles with a long-term focus on the German automotive sector.</p>
+    </div>
+    <div class="reveal" style="transition-delay:.2s">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">4×</div>
+          <div class="stat-label">Production increase (CEAT)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">3W</div>
+          <div class="stat-label">Bus prototype delivered</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">6+</div>
+          <div class="stat-label">CAD/CAE tools</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">🏅</div>
+          <div class="stat-label">IndiaSkills Excellence</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-label">location &amp; availability</div>
+        <div class="info-val">Indore, Madhya Pradesh</div>
+        <div class="info-sub">Open to full-time roles &amp; freelance projects across India</div>
+        <div class="info-btns">
+          <a href="mailto:nihalnigam11@gmail.com" class="btn-outline" style="font-size:12px;padding:8px 14px;">✉ Email</a>
+          <a href="tel:+919826250607" class="btn-outline" style="font-size:12px;padding:8px 14px;">✆ Call</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== INDIASKILLS ==================== -->
+<section id="indiaskills">
+  <div class="section-hand reveal">· achievement</div>
+  <h2 class="section-title reveal">IndiaSkills <em>2025–26</em><br>Journey</h2>
+  <p class="reveal" style="color:var(--ink-soft);max-width:500px;margin-top:8px;font-size:15px;line-height:1.8;">
+    A competitive progression through district, state and regional levels — culminating in the prestigious <strong style="color:var(--burnt-orange);font-weight:500;">Medallion of Excellence</strong> in Additive Manufacturing.
+  </p>
+  <div class="ws-layout">
+    <div class="ws-timeline reveal" style="transition-delay:.1s">
+      <div class="ws-step">
+        <div class="ws-line-col"><div class="ws-node">🏆</div><div class="ws-conn"></div></div>
+        <div class="ws-content">
+          <div class="ws-lev">Stage 01 · District Level</div>
+          <div class="ws-stage-title">District Champion</div>
+          <span class="ws-badge ws-badge-gold">Winner</span>
+          <div class="ws-desc">Secured first place, advancing to represent at state stage. Skill: Additive Manufacturing.</div>
+        </div>
+      </div>
+      <div class="ws-step">
+        <div class="ws-line-col"><div class="ws-node">🥇</div><div class="ws-conn"></div></div>
+        <div class="ws-content">
+          <div class="ws-lev">Stage 02 · State Level</div>
+          <div class="ws-stage-title">State Champion</div>
+          <span class="ws-badge ws-badge-gold">Winner</span>
+          <div class="ws-desc">Won at Madhya Pradesh state level, qualifying to compete among the nation's best.</div>
+        </div>
+      </div>
+      <div class="ws-step">
+        <div class="ws-line-col"><div class="ws-node top">⭐</div></div>
+        <div class="ws-content">
+          <div class="ws-lev">Stage 03 · Regional — Western Region</div>
+          <div class="ws-stage-title">Medallion of Excellence</div>
+          <span class="ws-badge ws-badge-exc">Medallion of Excellence</span>
+          <div class="ws-desc">Awarded at IndiaSkills 2025–26 Regional Competition — Western Region, Helipad Exhibition Centre, Gandhinagar (Feb 15–18, 2026). Organised by NSDC under Ministry of Skill Development, Government of India.</div>
+        </div>
+      </div>
+    </div>
+    <div class="ws-medal-wrap reveal" style="transition-delay:.2s">
+      <div class="ws-medal-frame">
+        <div class="hero-photo-tape" style="width:88px;"></div>
+        <img src="images/indiaskills-medal.jpg" alt="IndiaSkills Medallion of Excellence" loading="lazy"/>
+      </div>
+      <div class="fig-caption" style="position:absolute;bottom:-30px;left:0;right:0;">fig. 01 — the medallion</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SKILLS ==================== -->
+<section id="skills">
+  <div class="section-hand reveal">· toolbox</div>
+  <h2 class="section-title reveal">Technical <em>Skills</em></h2>
+  <div class="skills-categories">
+    <div class="skill-cat reveal">
+      <div class="skill-cat-title">CAE / FEA</div>
+      <div class="skill-cat-tags">
+        <span class="tag">ANSYS Mechanical</span><span class="tag">FEA</span><span class="tag">Static Structural</span><span class="tag">Dynamic Structural</span><span class="tag">Thermal Analysis</span><span class="tag">Stress &amp; Deformation</span><span class="tag">Multibody Dynamics</span>
+      </div>
+    </div>
+    <div class="skill-cat reveal" style="transition-delay:.05s">
+      <div class="skill-cat-title">CAD Software</div>
+      <div class="skill-cat-tags">
+        <span class="tag">SolidWorks</span><span class="tag">PTC Creo</span><span class="tag">CATIA</span><span class="tag">Solid Edge</span><span class="tag">AutoCAD</span>
+      </div>
+    </div>
+    <div class="skill-cat reveal" style="transition-delay:.1s">
+      <div class="skill-cat-title">Manufacturing</div>
+      <div class="skill-cat-tags">
+        <span class="tag">GD&amp;T</span><span class="tag">DFM</span><span class="tag">Reverse Engineering</span><span class="tag">Heat Treatment</span><span class="tag">Metal 3D Printing</span><span class="tag">Resin 3D Printing</span><span class="tag">Structural Fabrication</span><span class="tag">Weldments</span>
+      </div>
+    </div>
+    <div class="skill-cat reveal" style="transition-delay:.15s">
+      <div class="skill-cat-title">In Progress</div>
+      <div class="skill-cat-tags">
+        <span class="tag">HyperMesh</span><span class="tag">Python (Pandas)</span><span class="tag">MATLAB</span><span class="tag">Simulink</span><span class="tag">Vehicle Dynamics</span><span class="tag">Topology Optimization</span>
+      </div>
+    </div>
+    <div class="skill-cat reveal" style="transition-delay:.2s">
+      <div class="skill-cat-title">Core Strengths</div>
+      <div class="skill-cat-tags">
+        <span class="tag">Simulation-Informed Design</span><span class="tag">Design-to-Manufacturing Handoff</span><span class="tag">Multi-physics Thinking</span><span class="tag">Technical Documentation</span><span class="tag">BOM/ZEDBC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== EXPERIENCE ==================== -->
+<section id="experience">
+  <div class="section-hand reveal">· journey</div>
+  <h2 class="section-title reveal">Professional <em>History</em></h2>
+  <div class="exp-list">
+    <div class="exp-item reveal">
+      <div class="exp-date">Mar 2026 – Present<span class="exp-loc">Indore, M.P.</span></div>
+      <div>
+        <div class="exp-co">Pragyanik AI Pvt. Ltd.</div>
+        <div class="exp-role">Mechanical Intern</div>
+        <ul class="exp-ul">
+          <li>Designed full mechanical assemblies of an AI-driven agricultural robot in SolidWorks — chassis, seeding, weeding, and irrigation subsystems.</li>
+          <li>Performed kinematic modelling and motion analysis in MATLAB to validate robot movement and end-effector trajectories.</li>
+          <li>Carried out structural simulations in ANSYS to test design under real agricultural load conditions.</li>
+          <li>Worked hands-on through the full design-to-fabrication cycle as part of a cross-functional team.</li>
+        </ul>
+        <div class="exp-tags"><span class="tag">SolidWorks</span><span class="tag">ANSYS</span><span class="tag">MATLAB</span><span class="tag">Robotics</span></div>
+      </div>
+    </div>
+    <div class="exp-item reveal" style="transition-delay:.05s">
+      <div class="exp-date">Jun 2026 – Jul 2026<span class="exp-loc">Nagpur / Indore</span></div>
+      <div>
+        <div class="exp-co">Swastik Engineering / CEAT</div>
+        <div class="exp-role">Design Intern</div>
+        <ul class="exp-ul">
+          <li>Reverse-engineered an existing industrial jamming machine manufactured for CEAT, capturing precise geometric and functional data.</li>
+          <li>Developed complete 3D CAD models and detailed assembly designs in PTC Creo.</li>
+          <li>Redesigned components to develop an improved, automated version — boosting production 4×.</li>
+          <li>Collaborated with the technical team to validate design intent against original machine requirements.</li>
+        </ul>
+        <div class="exp-tags"><span class="tag">PTC Creo</span><span class="tag">Reverse Engineering</span><span class="tag">DFM</span><span class="tag">Automation</span></div>
+      </div>
+    </div>
+    <div class="exp-item reveal" style="transition-delay:.1s">
+      <div class="exp-date">Apr 2025 – Jun 2025<span class="exp-loc">Indore, M.P.</span></div>
+      <div>
+        <div class="exp-co">Sanatan Bus Body Builder</div>
+        <div class="exp-role">Jr. Design Engineer</div>
+        <ul class="exp-ul">
+          <li>Designed complete bus body structure prototype for Ashok Leyland — full CAD model in 3 weeks from chassis arrival.</li>
+          <li>Led entire CAD development: structural layout, component integration, model optimisation for manufacturability.</li>
+          <li>Collaborated with manufacturing team through paneling, plywood fitting and ABS installation.</li>
+          <li>Prepared complete BOM per ZEDBC standards; design directly used in physical fabrication.</li>
+        </ul>
+        <div class="exp-tags"><span class="tag">Creo</span><span class="tag">SolidWorks</span><span class="tag">DFM</span><span class="tag">BOM/ZEDBC</span><span class="tag">Prototype</span></div>
+      </div>
+    </div>
+    <div class="exp-item reveal" style="transition-delay:.15s">
+      <div class="exp-date">Nov 2024 – Dec 2024<span class="exp-loc">Chakan, Maharashtra</span></div>
+      <div>
+        <div class="exp-co">EKA Mobility</div>
+        <div class="exp-role">Freelance — Material Logistics Design</div>
+        <ul class="exp-ul">
+          <li>Analysed material flow to design customised logistics trolleys for electric bus component handling.</li>
+          <li>Engineered multi-variant trolley designs with step-by-step 2D manufacturing drawings in Creo.</li>
+          <li>Delivered 3D models (PVZ &amp; STP) for accurate manufacturing and client review.</li>
+        </ul>
+        <div class="exp-tags"><span class="tag">Creo</span><span class="tag">2D Drafting</span><span class="tag">Logistics Design</span><span class="tag">EV Industry</span></div>
+      </div>
+    </div>
+    <div class="exp-item reveal" style="transition-delay:.2s">
+      <div class="exp-date">Feb 2024 – Mar 2024<span class="exp-loc">Dewas, M.P.</span></div>
+      <div>
+        <div class="exp-co">Gajra Differential Gears</div>
+        <div class="exp-role">Trainee Engineer</div>
+        <ul class="exp-ul">
+          <li>Studied carburisation, rough teeth cutting, shot blasting, direct/press quenching and heat treatment.</li>
+          <li>Observed production of Crown Wheel, Tail Pinion, Bevel Gear and Spider components.</li>
+          <li>Enhanced skills in quality management, design reading and GD&amp;T.</li>
+        </ul>
+        <div class="exp-tags"><span class="tag">GD&amp;T</span><span class="tag">Heat Treatment</span><span class="tag">Quality Mgmt.</span></div>
+      </div>
+    </div>
+    <div class="exp-item reveal" style="transition-delay:.25s">
+      <div class="exp-date">February 2023<span class="exp-loc">Pithampur, M.P.</span></div>
+      <div>
+        <div class="exp-co">SAE-India BAJA</div>
+        <div class="exp-role">Volunteer — Timing Team</div>
+        <ul class="exp-ul"><li>Operated precision instruments to measure timing and distance for off-road vehicle competition events at the NATRAX facility.</li></ul>
+        <div class="exp-tags"><span class="tag">SAE</span><span class="tag">Off-road Vehicles</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CERTIFICATIONS ==================== -->
+<section id="certifications">
+  <div class="section-hand reveal">· credentials</div>
+  <h2 class="section-title reveal">Certification <em>Vault</em></h2>
+  <div class="certs-grid">
+    <div class="cert reveal"><div class="cert-icon">🎖</div><div class="cert-pri">IndiaSkills · Priority 01</div><div class="cert-name">Medallion of Excellence — Additive Manufacturing</div><div class="cert-org">IndiaSkills 2025–26 Regional · Western Region · NSDC</div><div class="cert-date">Feb 15–18, 2026 · Gandhinagar</div></div>
+    <div class="cert reveal" style="transition-delay:.03s"><div class="cert-icon">🔬</div><div class="cert-pri">Siemens · Priority 02</div><div class="cert-name">Additive Manufacturing — One-Week Intensive</div><div class="cert-org">NITTTR–Siemens Centre of Excellence, Bhopal</div><div class="cert-date">04.02.2026 – 11.02.2026</div></div>
+    <div class="cert reveal" style="transition-delay:.06s"><div class="cert-icon">🏆</div><div class="cert-pri">Design Competition · Priority 03</div><div class="cert-name">Battle of Design — 2nd Position</div><div class="cert-org">CITRONICS 2K26 · National Level Techno-Management Fest · CDGI, Indore</div><div class="cert-date">08 April 2026</div></div>
+    <div class="cert reveal" style="transition-delay:.09s"><div class="cert-icon">⚙️</div><div class="cert-pri">Siemens · Priority 04</div><div class="cert-name">Operations Industrial Engineer Job Simulation</div><div class="cert-org">Siemens Mobility · Forage</div><div class="cert-date">April 30, 2024</div></div>
+    <div class="cert reveal" style="transition-delay:.12s"><div class="cert-icon">📐</div><div class="cert-pri">CAD Professional · Priority 05</div><div class="cert-name">SolidWorks — Certificate of Completion</div><div class="cert-org">Design Solution, Indore (ISO 9001:2015)</div><div class="cert-date">25 Feb 2025 · 2 Months</div></div>
+    <div class="cert reveal" style="transition-delay:.15s"><div class="cert-icon">✏️</div><div class="cert-pri">CAD Professional · Priority 06</div><div class="cert-name">CATIA — Certificate of Completion</div><div class="cert-org">Design Solution, Indore (ISO 9001:2015)</div><div class="cert-date">25 Feb 2025 · 2 Months</div></div>
+    <div class="cert reveal" style="transition-delay:.18s"><div class="cert-icon">📏</div><div class="cert-pri">CAD Professional · Priority 07</div><div class="cert-name">AutoCAD — Certificate of Completion</div><div class="cert-org">Design Solution, Indore (ISO 9001:2015)</div><div class="cert-date">25 Feb 2025 · 2 Months</div></div>
+    <div class="cert reveal" style="transition-delay:.21s"><div class="cert-icon">🔧</div><div class="cert-pri">Manufacturing · Priority 08</div><div class="cert-name">CNC Milling Training Programme</div><div class="cert-org">MSME Indo-German Tool Room, Indore (ESDP-ATI Sponsored)</div><div class="cert-date">01 Sep – 15 Sep 2025</div></div>
+    <div class="cert reveal" style="transition-delay:.24s"><div class="cert-icon">🏋</div><div class="cert-pri">Volunteering · Priority 09</div><div class="cert-name">BAJA SAE India 2023 — Certificate of Appreciation</div><div class="cert-org">SAE India · NATRAX Facility, Pithampur, M.P.</div><div class="cert-date">15–18 February 2023</div></div>
+    <div class="cert reveal" style="transition-delay:.27s"><div class="cert-icon">🎓</div><div class="cert-pri">Academic · Priority 10</div><div class="cert-name">Internship — Mechanical Engineering Dept.</div><div class="cert-org">Acropolis Institute of Technology and Research</div><div class="cert-date">Aug 24 – Sep 05, 2022</div></div>
+    <div class="cert reveal" style="transition-delay:.3s"><div class="cert-icon">💡</div><div class="cert-pri">Innovation · Priority 11</div><div class="cert-name">Ideate &amp; Innovate — Runner-Up</div><div class="cert-org">Acropolis Institute · Engineer's Day 2022</div><div class="cert-date">16 September 2022</div></div>
+    <div class="cert reveal" style="transition-delay:.33s"><div class="cert-icon">💻</div><div class="cert-pri">Digital · Priority 12</div><div class="cert-name">Digital Marketing &amp; E-Commerce</div><div class="cert-org">MSME Indo-German Tool Room, Indore</div><div class="cert-date">23–25 January 2023</div></div>
+  </div>
+</section>
+
+<!-- ==================== EDUCATION ==================== -->
+<section id="education">
+  <div class="section-hand reveal">· foundation</div>
+  <h2 class="section-title reveal">Academic <em>Foundation</em></h2>
+  <div class="edu-list">
+    <div class="edu-card reveal">
+      <div><div class="edu-deg">Bachelor of Engineering — Mechanical</div><div class="edu-inst">Institute of Engineering &amp; Technology (IET DAVV), Indore, Madhya Pradesh</div></div>
+      <div class="edu-yr">2023 – 2027<div class="edu-grade">Currently Pursuing</div></div>
+    </div>
+    <div class="edu-card reveal" style="transition-delay:.08s">
+      <div><div class="edu-deg">Diploma in Mechanical Engineering</div><div class="edu-inst">Acropolis Institute of Technology and Research, Indore, Madhya Pradesh</div></div>
+      <div class="edu-yr">2021 – 2024<div class="edu-grade">CGPA: 7.69</div></div>
+    </div>
+    <div class="edu-card reveal" style="transition-delay:.16s">
+      <div><div class="edu-deg">10th Standard</div><div class="edu-inst">St. Vincent Palloti School, Indore, Madhya Pradesh</div></div>
+      <div class="edu-yr">2021<div class="edu-grade">89%</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CONTACT ==================== -->
+<section id="contact">
+  <div class="contact-grid">
+    <div>
+      <h2 class="contact-h reveal">Let's <em>build</em><br>something<br>precise.</h2>
+      <p class="contact-sub reveal" style="transition-delay:.08s">Open to full-time roles, freelance design projects, and collaborative opportunities in mechanical design, product development, or additive manufacturing.</p>
+      <div class="reveal" style="margin-top:24px;transition-delay:.16s;">
+        <a href="https://www.linkedin.com/in/nihal-nigam-ri1522" target="_blank" class="btn-fill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          Connect on LinkedIn
+        </a>
+      </div>
+    </div>
+    <div class="c-links reveal" style="transition-delay:.12s">
+      <a href="mailto:nihalnigam11@gmail.com" class="c-link"><div class="c-icon">✉</div><div><span class="c-lbl">Email</span>nihalnigam11@gmail.com</div></a>
+      <a href="tel:+919826250607" class="c-link"><div class="c-icon">✆</div><div><span class="c-lbl">Phone</span>+91 98262 50607</div></a>
+      <a href="https://www.linkedin.com/in/nihal-nigam-ri1522" target="_blank" class="c-link"><div class="c-icon" style="font-weight:700;font-size:14px;">in</div><div><span class="c-lbl">LinkedIn</span>linkedin.com/in/nihal-nigam-ri1522</div></a>
+      <div class="c-link" style="border-bottom:none;cursor:default;"><div class="c-icon">📍</div><div><span class="c-lbl">Location</span>Indore, Madhya Pradesh, India</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="f-copy">&copy; 2026 Nihal Nigam · Mechanical Design Engineer · Indore</div>
+  <a href="https://www.linkedin.com/in/nihal-nigam-ri1522" target="_blank" class="f-link">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+    LinkedIn
+  </a>
+</footer>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+// ===== Theme Toggle =====
+const html = document.documentElement;
+const lightBtn = document.getElementById('lightBtn');
+const darkBtn = document.getElementById('darkBtn');
+const saved = localStorage.getItem('theme');
+if (saved) { html.dataset.theme = saved; updateBtns(); }
+
+function updateBtns() {
+  const t = html.dataset.theme;
+  lightBtn.classList.toggle('active', t === 'light');
+  darkBtn.classList.toggle('active', t === 'dark');
+}
+lightBtn.addEventListener('click', () => { html.dataset.theme = 'light'; localStorage.setItem('theme','light'); updateBtns(); });
+darkBtn.addEventListener('click', () => { html.dataset.theme = 'dark'; localStorage.setItem('theme','dark'); updateBtns(); });
+
+// ===== Reading Progress Bar =====
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (window.scrollY / h * 100) + '%';
+});
+
+// ===== Navbar Auto-hide =====
+let lastY = 0;
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('hidden', window.scrollY > lastY && window.scrollY > 200);
+  lastY = window.scrollY;
+});
+
+// ===== Mobile Menu =====
+const ham = document.getElementById('ham');
+const navLinks = document.getElementById('navLinks');
+ham.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+  const sp = ham.querySelectorAll('span');
+  if (navLinks.classList.contains('open')) {
+    sp[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    sp[1].style.opacity = '0';
+    sp[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else { sp.forEach(s => { s.style.transform = ''; s.style.opacity = ''; }); }
+});
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    ham.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  });
+});
+
+// ===== Scroll Reveal =====
+const revObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
+}, { threshold: 0.06 });
+document.querySelectorAll('.reveal').forEach(r => revObs.observe(r));
+
+// ===== Project Image Sliders (dynamic height + swipe + keyboard) =====
+const allSliders = [];
+
+document.querySelectorAll('[data-slider]').forEach(slider => {
+  const wrap = slider.closest('.project-img-wrap');
+  const card = wrap.closest('.project-card');
+  const slides = slider.querySelectorAll('.project-slide');
+  const total = slides.length;
+  let idx = 0;
+  const nav = wrap.querySelector('.project-slider-nav');
+  const dotsWrap = nav.querySelector('[data-dots]');
+  const prevBtn = nav.querySelector('[data-prev]');
+  const nextBtn = nav.querySelector('[data-next]');
+
+  // Create dots
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('button');
+    d.className = 'project-dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  }
+
+  // Set height to match image, compensate scroll so bottom stays anchored
+  function setHeight(i, animate) {
+    const img = slides[i].querySelector('img');
+    const apply = () => {
+      const ratio = img.naturalWidth / img.naturalHeight;
+      const newH = wrap.clientWidth / ratio;
+      const oldH = wrap.offsetHeight;
+      wrap.style.height = newH + 'px';
+      // Compensate scroll so the bottom of the wrap (where arrows are) stays in place
+      if (animate && oldH > 0 && Math.abs(newH - oldH) > 2) {
+        const rect = wrap.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          window.scrollBy({ top: newH - oldH, behavior: 'instant' });
+        }
+      }
+    };
+    if (img.complete && img.naturalHeight) { apply(); }
+    else { img.addEventListener('load', apply, { once: true }); }
+  }
+
+  function goTo(i) {
+    idx = i;
+    slider.style.transform = 'translateX(-' + (i * 100) + '%)';
+    dotsWrap.querySelectorAll('.project-dot').forEach((d, j) => d.classList.toggle('active', j === i));
+    setHeight(i, true);
+  }
+  function goPrev() { goTo((idx - 1 + total) % total); }
+  function goNext() { goTo((idx + 1) % total); }
+
+  prevBtn.addEventListener('click', goPrev);
+  nextBtn.addEventListener('click', goNext);
+
+  // ---- Touch / Swipe ----
+  let touchX0 = 0, touchY0 = 0, swiping = false;
+  wrap.addEventListener('touchstart', e => {
+    touchX0 = e.touches[0].clientX;
+    touchY0 = e.touches[0].clientY;
+    swiping = true;
+  }, { passive: true });
+  wrap.addEventListener('touchmove', e => {
+    if (!swiping) return;
+    const dx = e.touches[0].clientX - touchX0;
+    const dy = e.touches[0].clientY - touchY0;
+    // If horizontal swipe is dominant, prevent vertical scroll
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+  wrap.addEventListener('touchend', e => {
+    if (!swiping) return;
+    swiping = false;
+    const dx = e.changedTouches[0].clientX - touchX0;
+    if (dx < -40) goNext();
+    else if (dx > 40) goPrev();
+  }, { passive: true });
+
+  // Initial height (no scroll compensation)
+  setHeight(0, false);
+  window.addEventListener('resize', () => setHeight(idx, false));
+
+  // Store reference for keyboard nav
+  allSliders.push({ card, goNext, goPrev, wrap });
+});
+
+// ---- Keyboard Arrow Navigation ----
+document.addEventListener('keydown', e => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  // Find the slider most visible in the viewport
+  let best = null, bestArea = 0;
+  allSliders.forEach(s => {
+    const r = s.card.getBoundingClientRect();
+    const top = Math.max(r.top, 0);
+    const bot = Math.min(r.bottom, window.innerHeight);
+    const area = Math.max(0, bot - top);
+    if (area > bestArea) { bestArea = area; best = s; }
+  });
+  if (best && bestArea > 80) {
+    e.preventDefault();
+    if (e.key === 'ArrowLeft') best.goPrev();
+    else best.goNext();
+  }
+});
+
+// ===== Custom Cursor Trail =====
+(function() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  const main = document.getElementById('cursorMain');
+  const trails = [
+    document.getElementById('ct1'),
+    document.getElementById('ct2'),
+    document.getElementById('ct3'),
+    document.getElementById('ct4'),
+    document.getElementById('ct5')
+  ];
+  const sizes = [7, 6, 5, 4, 3];
+  const speeds = [0.25, 0.2, 0.15, 0.1, 0.07];
+
+  trails.forEach((t, i) => {
+    t.style.width = sizes[i] + 'px';
+    t.style.height = sizes[i] + 'px';
+  });
+
+  let mx = -100, my = -100;
+  let positions = trails.map(() => ({ x: -100, y: -100 }));
+  let moved = false;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    main.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+    if (!moved) {
+      moved = true;
+      trails.forEach(t => t.classList.add('visible'));
+    }
+  });
+
+  // Hover effect on interactive elements
+  const hoverEls = 'a, button, [role="button"], .project-card, .cert, .stat-card, .skill-cat, .edu-card, .exp-item';
+  document.querySelectorAll(hoverEls).forEach(el => {
+    el.addEventListener('mouseenter', () => main.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => main.classList.remove('hovering'));
+  });
+
+  // Hide cursor when leaving window
+  document.addEventListener('mouseleave', () => {
+    main.style.opacity = '0';
+    trails.forEach(t => t.style.opacity = '0');
+  });
+  document.addEventListener('mouseenter', () => {
+    main.style.opacity = '1';
+    trails.forEach(t => { if (moved) t.style.opacity = ''; });
+  });
+
+  function animate() {
+    let leader = { x: mx, y: my };
+    trails.forEach((t, i) => {
+      const pos = positions[i];
+      pos.x += (leader.x - pos.x) * speeds[i];
+      pos.y += (leader.y - pos.y) * speeds[i];
+      t.style.transform = `translate(${pos.x}px, ${pos.y}px) translate(-50%, -50%)`;
+      leader = pos;
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>
